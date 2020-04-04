@@ -1,0 +1,14 @@
+
+
+{% for question in questions %}
+    <br>
+
+    {{ question.title }}
+
+    <a class="card-text align-top" href="{% url 'question' question.id %}">{{question.text}}</a>
+
+{% endfor %}
+
+
+<br>
+Page {{ page }}_of_{{ all_pages }}.
