@@ -167,7 +167,7 @@ class TestInitData(unittest.TestCase):
         time.sleep(2)
         question = Question.objects.create(title='question last', text='text',
                                            author=user)
-        question, _ = Question.objects.get_or_create(pk=3141592,
+        question, _ = Question.objects.get_or_create(pk=2,
                                                      title='question about pi',
                                                      text='what is the last '
                                                           'digit?',

@@ -7,10 +7,7 @@ class AskForm(forms.Form):
     text = forms.CharField(max_length=255, widget=forms.Textarea)
 
     def clean(self):
-        # cleaned_data = self.cleaned_data['text']
-        # #cleaned_data = super.clean()
-        # breakpoint()
-        cleaned_data = "_-"
+        cleaned_data = self.cleaned_data
         return cleaned_data
 
     def save(self, user):
@@ -20,16 +17,13 @@ class AskForm(forms.Form):
         return question
 
 
-
-#form.is_valid
-
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     question = forms.IntegerField()
     question_id = forms.IntegerField()
 
     def clean(self):
-        cleaned_data = self.clean()
+        cleaned_data = self.cleaned_data
         return cleaned_data
 
     def save(self, author):

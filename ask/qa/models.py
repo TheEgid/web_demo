@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 import time
 import random
 
@@ -25,10 +26,9 @@ class QuestionManager(models.Manager):
 
 class Question(models.Model):
     objects = QuestionManager()
-
     title = models.CharField(max_length=255)
     text = models.TextField()
-    added_at = models.DateTimeField(blank=True, auto_now_add=True)
+    added_at = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     rating = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='likes_user')
@@ -40,6 +40,9 @@ class Question(models.Model):
         self.slug = slugify(strtime + hash)
         super(Question, self).save()
 
+    def get_url(self):
+        url = reverse('question', args=(self.pk,))
+        return url
 
 class Answer(models.Model):
     text = models.TextField()

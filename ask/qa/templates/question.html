@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+    <div> User: {{ user }} </div>
 
     {{ question.title }}
+    <br>
+    Text: {{ question.text }}
+    <br>
+    (Author: {{ question.author }})
 
-    {{ question.text }}
-
-
-    {% for answer in answers %}
-        {{ answer.text }}
+    {% for a in answers %}
+        <div> Text: {{ a.text }} <br> Author: ({{ a.author }}) <br>  </div>
     {% endfor %}
 
-    <form method = "post" action="{% url 'ask' %}">
+    <form method = "post" action="{% url 'question' question.id %}">
         {% csrf_token %}
-        {{ form.as_table }}
+        {{ form.as_p }}
         <button type = "submit"> Save </button>
     </form>
 
