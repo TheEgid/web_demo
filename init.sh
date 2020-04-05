@@ -24,7 +24,8 @@ sudo /etc/init.d/nginx restart
 #gunicorn hello:app --bind='0.0.0.0:8080' &
 #sudo python3 manage.py runserver 0.0.0.0:8000
 
-sudo python3 /home/box/web/ask/manage.py createsuperuser
+
 sudo python3 /home/box/web/ask/manage.py migrate
+sudo python3 /home/box/web/ask/manage.py createsuperuser
 
 sudo gunicorn -b 0.0.0.0:8000 --pythonpath /home/box/web/ask ask.wsgi:application
