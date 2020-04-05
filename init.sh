@@ -9,6 +9,7 @@ sudo python3 -m pip install gunicorn
 sudo python3 -m pip install django==2.0.7  #2.2.2
 sudo python3 -m pip install sqlparse==0.3.0
 sudo python3 -m pip install mysqlclient==1.4.4
+sudo python3 -m pip install django_createsuperuser==2019.9.7
 
 
 sudo /etc/init.d/mysql start
@@ -24,8 +25,7 @@ sudo /etc/init.d/nginx restart
 #gunicorn hello:app --bind='0.0.0.0:8080' &
 #sudo python3 manage.py runserver 0.0.0.0:8000
 
-
 sudo python3 /home/box/web/ask/manage.py migrate
-sudo python3 /home/box/web/ask/manage.py createsuperuser
+sudo python3 /home/box/web/ask/manage.py createsuperuser --username admin --password jokajoka --email freya7865@mail.ru
 
 sudo gunicorn -b 0.0.0.0:8000 --pythonpath /home/box/web/ask ask.wsgi:application

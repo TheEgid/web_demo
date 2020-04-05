@@ -4,7 +4,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -16,11 +15,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'ask', 
+    'ask',
     'qa',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+INSTALLED_APPS += ["django_createsuperuser"]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,7 +58,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ask.wsgi.application'
-
 
 if platform.system() != "Windows":
     DATABASES = {
@@ -109,7 +108,5 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
 
 STATIC_URL = '/static/'
