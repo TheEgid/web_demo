@@ -38,7 +38,7 @@ class Question(models.Model):
         strtime = "".join(str(time.time()).split("."))[6:]
         hash = generate_unical_hash()
         self.slug = slugify(strtime + hash)
-        super(Question, self).save(*args, **kwargs)
+        super(Question, self).save()
 
 
 class Answer(models.Model):

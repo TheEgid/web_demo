@@ -1,14 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% for question in questions %}
+        <br>
+
+        {{ question.title }}
+
+        <a class="card-text align-top" href="{% url 'question' question.id %}">{{question.text}}</a>
 
 
-{% for question in questions %}
+
+    {% endfor %}
+
+
     <br>
 
-    {{ question.title }}
+    {% if questions.has_previous %} previous {% endif %} Page {{ questions.number }} of {{ questions.paginator.num_pages }}. {% if questions.has_next %} next {% endif %}
 
-    <a class="card-text align-top" href="{% url 'question' question.id %}">{{question.text}}</a>
-
-{% endfor %}
-
-
-<br>
-Page {{ page }}_of_{{ all_pages }}.
+{% endblock %}

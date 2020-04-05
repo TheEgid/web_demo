@@ -1,9 +1,22 @@
+{% extends "base.html" %}
 
-{{ question.title }}
-
-{{ question.text }}
+{% block content %}
 
 
-{% for answer in answers %}
-    {{ answer.text }}
-{% endfor %}
+    {{ question.title }}
+
+    {{ question.text }}
+
+
+    {% for answer in answers %}
+        {{ answer.text }}
+    {% endfor %}
+
+    <form method = "post" action="{% url 'ask' %}">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <button type = "submit"> Save </button>
+    </form>
+
+
+{% endblock %}

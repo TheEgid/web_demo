@@ -3,6 +3,9 @@ from .models import Answer, Question
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_GET
 from django.http import HttpResponse
+from .forms import AnswerForm, AskForm  #, UserCreateForm
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 def page(request):
@@ -58,6 +61,24 @@ def question(request, slug):
         'question': question,
         'answers': answers,
     })
+
+def ask(request, *args, **kwargs):
+    global user
+    if request.method == 'POST':
+        # if not request.user.is_authenticated():
+        #     return HttpResponseRedirect('/login/')
+        form = AskForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=request.user.username)
+            question = form.save(user)
+            url = question.get_url()
+            breakpoint()
+            return HttpResponseRedirect(url)
+    else:
+        form = AskForm()
+    user = 'gogi'#request.user.username
+    return render(request, 'ask.html',
+            {'form': form, 'user': user})
 
 
 def test(request, *args, **kwargs):

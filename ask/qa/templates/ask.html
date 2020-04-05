@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div> {{ user }} </div>
+
+    <form method = "post" action="{% url 'ask' %}">
+{#        {% csrf_token %}#}
+        {{ form.as_p }}
+        <button type = "submit"> Save </button>
+    </form>
+
+{% endblock %}
+
