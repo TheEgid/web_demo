@@ -9,7 +9,7 @@ sudo python3 -m pip install gunicorn
 sudo python3 -m pip install django==2.0.7  #2.2.2
 sudo python3 -m pip install sqlparse==0.3.0
 sudo python3 -m pip install mysqlclient==1.4.4
-sudo python3 -m pip install django_createsuperuser==2019.9.7
+sudo python3 -m pip install django-createsuperuser
 
 
 sudo /etc/init.d/mysql start
