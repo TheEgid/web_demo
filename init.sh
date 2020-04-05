@@ -24,7 +24,7 @@ sudo /etc/init.d/nginx restart
 #sudo python3 manage.py runserver 0.0.0.0:8000
 
 sudo python3 /home/box/web/ask/manage.py migrate
-echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'freya7865@mail.ru', 'jokajoka')" | python manage.py shell
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'freya7865@mail.ru', 'jokajoka')" | sudo python3 /home/box/web/ask/manage.py shell
 
 #sudo python3 /home/box/web/ask/manage.py createsuperuser --username admin --password jokajoka --email freya7865@mail.ru
 
