@@ -11,8 +11,6 @@ _РАБОЧАЯ ПАПКА - /home/box/web
 
 git clone https://github.com/TheEgid/web_demo && sudo chmod g+rwx web_demo
 
-sudo pkill gunicorn 
-
 sudo mv web_demo web
 
 cd web && bash init.sh
