@@ -1,0 +1,57 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!--account-->
+    <div class="account">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert-info">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <h4>Ошибка входа в систему</h4>
+                    {% for err in form.errors %}
+                        {{ err }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+
+            <div class="account-top heading"><h3>Новый пользователь</h3></div>
+            <div class="address"><span>Ваше имя пользователя</span>{{ form.username }}</div>
+            <div class="address"><span>Электронная почта</span>000</div>
+            <div class="address"><span>Пароль</span>{{ form.password }}</div>
+            <div class="ad  dress"><span>Введите пароль еще раз</span>{{ form.re_password }}</div>
+            <input type="submit" value="login" />
+            <input type="hidden" name="next" value="{{ next }}" />
+
+        </form>
+    </div>
+
+
+    <!--                <div class="col-md-6 account-left second">
+                    <form action="/account_login/" method="POST">
+                        {% csrf_token %}
+                        <div class="account-top heading">
+                            <h3>У вас уже есть аккаунт? Пожалуйста, войдите в систему</h3>
+                        </div>
+                        <div class="address">
+                            <span>Имя пользователя</span>
+                            {{ loginForm.username }}
+                        </div>
+                        <div class="address">
+                            <span>Пароль</span>
+                            {{ loginForm.password }}
+                        </div>
+                        <div class="address">
+                            <a class="forgot" href="#">Забыли пароль?</a>
+                            <input type="submit" value="войти">
+                        </div>
+                    </form>
+                </div>
+-->
+
+
+    <!-- checkout -->
+    <!--start-bottom-->
+{% endblock %}

@@ -218,3 +218,15 @@ class TestAnswerForm(unittest.TestCase):
         assert isinstance(question, (forms.IntegerField,
                                      forms.ChoiceField)), \
             "author field is not an instalce of IntegerField or ChoiceField"
+
+
+class TestAuthorship(unittest.TestCase):
+    def test_authorship(self):
+        username = User.objects.all()[0]  # sys.argv[2]
+        q_id = username.id  # q_id = 1 #sys.argv[3]
+        question = Question.objects.get(pk=q_id)
+        user = User.objects.get(username=username)
+        assert question.author == user, \
+            f"Question id={q_id} " \
+            f"created by authorized user username={username}, " \
+            f"but author field is empty"
