@@ -14,18 +14,14 @@ sudo /etc/init.d/mysql start
 sudo mysql -uroot -e "create database stepic_web;"
 sudo mysql -uroot -e "grant all privileges on stepic_web.* to 'box'@'localhost' with grant option;"
 
-
 sudo rm -r /etc/nginx/sites-enabled/*
 sudo ln -sf /home/box/web/etc/nginx.conf  /etc/nginx/sites-enabled/test.conf
 sudo /etc/init.d/nginx restart
-
 
 #gunicorn hello:app --bind='0.0.0.0:8080' &
 #sudo python3 manage.py runserver 0.0.0.0:8000
 
 sudo python3 /home/box/web/ask/manage.py migrate
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'freya7865@mail.ru', 'jokajoka')" | sudo python3 /home/box/web/ask/manage.py shell
-
-#sudo python3 /home/box/web/ask/manage.py createsuperuser --username admin --password jokajoka --email freya7865@mail.ru
 
 sudo gunicorn -b 0.0.0.0:8000 --pythonpath /home/box/web/ask ask.wsgi:application
