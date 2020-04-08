@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <div> {{ user }} </div>
+    <div> User: {{ author }} </div>
 
     <form method = "post" action="{% url 'ask' %}">
         {% csrf_token %}

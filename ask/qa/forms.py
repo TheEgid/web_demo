@@ -99,36 +99,35 @@ class AnswerForm(forms.Form):
 #         if not self.is_valid():
 #             raise forms.ValidationError(u'Both email and password are required')
 #         cleaned_data = super(LoginForm, self).clean()
-#         return cleaned_data
-#
-#
-# class RegistForm(forms.Form):
-#     username = forms.CharField(
-#         required=True,
-#         label=r'Username',
-#         error_messages={'required': 'Required fields'},
-#         widget=forms.TextInput(attrs={'placeholder': r'Username'}))
-#     email = forms.EmailField(
-#         required=True,
-#         label=r'Email address',
-#         error_messages={'required': 'Mailbox must be legal'},
-#         widget=forms.EmailInput(attrs={'placeholder': r'Email address'}))
-#     password = forms.CharField(
-#         required=True,
-#         label=r'Password',
-#         error_messages={'required': 'Please enter your password'},
-#         widget=forms.PasswordInput(attrs={'placeholder': r'Password'}))
-#     re_password = forms.CharField(
-#         required=True,
-#         label=r'Repeat password',
-#         error_messages={'required': 'Please enter the password again'},
-#         widget=forms.PasswordInput(attrs={'placeholder': r'Repeat password'}))
-#
-#     def clean(self):
-#         if not self.is_valid():
-#             raise forms.ValidationError(r'Incomplete information')
-#         cleaned_data = super(RegistForm, self).clean()
-#         return cleaned_data
+
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(
+        required=True,
+        label=r'Username',
+        error_messages={'required': 'Required fields'},
+        widget=forms.TextInput(attrs={'placeholder': r'Username'}))
+    email = forms.EmailField(
+        required=True,
+        label=r'Email address',
+        error_messages={'required': 'Mailbox must be legal'},
+        widget=forms.EmailInput(attrs={'placeholder': r'Email address'}))
+    password = forms.CharField(
+        required=True,
+        label=r'Password',
+        error_messages={'required': 'Please enter your password'},
+        widget=forms.PasswordInput(attrs={'placeholder': r'Password'}))
+    # re_password = forms.CharField(
+    #     required=True,
+    #     label=r'Repeat password',
+    #     error_messages={'required': 'Please enter the password again'},
+    #     widget=forms.PasswordInput(attrs={'placeholder': r'Repeat password'}))
+
+    def clean(self):
+        if not self.is_valid():
+            raise forms.ValidationError(r'Incomplete information')
+        cleaned_data = super(RegisterForm, self).clean()
+        return cleaned_data
 
 
 #forms
@@ -137,16 +136,27 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class RegistForm(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+# class RegistForm(forms.ModelForm):
+#     password = forms.CharField(label='Password', widget=forms.PasswordInput)
+#     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+#
+#     email = forms.EmailField()
+#
+#
+#     model = User
+#
+#
+#     def clean_password2(self):
+#         cd = self.cleaned_data
+#         if cd['password'] != cd['password2']:
+#             raise forms.ValidationError('Passwords don\'t match.')
+#         return cd['password2']
 
-    class Meta:
-        model = User
-        fields = ('username',  'email')
+    # cleaned_data = super(UserCreateForm, self).clean()
+    # try:
+    #     user = User.objects.get(email=cleaned_data['email'])
+    #     return None
+    # except ObjectDoesNotExist:
+    #     pass
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
-        return cd['password2']
+    # return cleaned_data

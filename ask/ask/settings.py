@@ -1,21 +1,14 @@
 import platform
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+SECRET_KEY = '78rewtgwgwgzspy27*_!nmkh12^_ustgvn%5+pfzge'
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '78drm=azxdo(-y3^554zspy27*_!nmkh12^_ustgvn%5+pfzge'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Application definition
 
 INSTALLED_APPS = [
     'ask',
@@ -75,8 +68,6 @@ else:
         }
     }
 
-# Password validation
-# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -95,17 +86,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MIDDLEWARE = MIDDLEWARE_CLASSES
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 STATIC_URL = '/static/'

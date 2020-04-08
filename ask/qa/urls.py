@@ -16,7 +16,7 @@ urlpatterns = [
 
     url(r'^login/$', user_login, name='login'),
 
-    # url(r'^signup/', test, name='signup'),
+    url(r'^signup/', register, name='signup'),
 
     path(r'question/<slug:slug>/', question, name='question'),
 
