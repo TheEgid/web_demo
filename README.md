@@ -9,11 +9,7 @@ _РАБОЧАЯ ПАПКА - /home/box/web
 
 ```
 
-git clone https://github.com/TheEgid/web_demo && sudo chmod g+rwx web_demo
-
-sudo mv web_demo web
-
-cd web && bash init.sh
+git clone https://github.com/TheEgid/web_demo && sudo chmod g+rwx web_demo && sleep 2 && sudo mv web_demo web && sleep 2 && cd web && bash init.sh
 
 sudo nginx -t
 

@@ -143,7 +143,13 @@ def signup(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            cd = form.cleaned_data
+            new_user = User.objects.create_user(username=cd['username'],
+                                                password=cd['password'],
+                                                email=cd['email'])
+            new_user.set_password(form.cleaned_data['password'])
+            new_user.save()
+
         username = form.cleaned_data.get('username')
         my_password = form.cleaned_data.get('password1')
         this_user = authenticate(username=username, password=my_password)
