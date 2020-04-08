@@ -1,11 +1,11 @@
 from django.conf.urls import url
-from django.urls import path
-
+from django.urls import include, path
 
 from qa.views import page, popular_page, question, ask
-from qa.views import test, user_login, register
+from qa.views import test, logout, user_login, register
 
 urlpatterns = [
+    url(r'^ask/', ask, name='ask'),
     url(r'^page/', page, name='page'),
     url(r'^$', page, name='page'),
     url(r'^popular/', popular_page, name='popular'),
@@ -20,6 +20,7 @@ urlpatterns = [
 
     path(r'question/<slug:slug>/', question, name='question'),
 
-    url(r'^ask/', ask, name='ask'),
+    url(r'^logout/$', logout, name='logout')
+
     # url(r'^new/', test, name='new'),
 ]

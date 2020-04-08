@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div> User: {{ user.username }} </div>
 
     {% for question in questions %}
         <br>
@@ -8,7 +9,6 @@
         {{ question.title }}
 
         <a class="card-text align-top" href="{% url 'question' question.id %}">{{question.text}}</a>
-
 
 
     {% endfor %}

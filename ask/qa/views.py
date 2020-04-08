@@ -4,12 +4,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse
 from django.urls import reverse
-
+from django.contrib.auth.decorators import login_required
 
 from django.contrib import auth
 from django.contrib import messages
 
-from .forms import AnswerForm, AskForm, LoginForm, RegisterForm  #, UserCreateForm
+from .forms import AnswerForm, AskForm, LoginForm, \
+    RegisterForm  # , UserCreateForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
@@ -28,6 +29,12 @@ def page(request):
     object_list = Question.objects.all().order_by('-pk')
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
+    try:
+        user_id = request.session['_auth_user_id']
+        user = User.objects.get(pk=user_id) or "Not authorized"
+    except KeyError:
+        user = "Not authorized"
+   #breakpoint()
     if not page:
         page = 1
     try:
@@ -42,6 +49,7 @@ def page(request):
                   {'page': page,
                    'all_pages': all_pages,
                    'questions': questions,
+                   'user': user,
                    })
 
 
@@ -66,7 +74,6 @@ def popular_page(request):
                    })
 
 
-
 def question(request, slug):
     global question
     global answers
@@ -74,8 +81,10 @@ def question(request, slug):
 
     if request.method == "POST":
         if form.is_valid():
-            #user = User.objects.get(username=request.user.username)
-            user = User.objects.get(pk=1)
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect('/login/')
+            user_id = request.session['_auth_user_id']
+            user = User.objects.get(pk=user_id) or "Not authorized"
             form.save(user)
             url = reverse('question',
                           args=(form.cleaned_data['question_id'],))
@@ -91,28 +100,69 @@ def question(request, slug):
                    'answers': answers})
 
 
+# @login_required
 def ask(request, *args, **kwargs):
     global user
-    global author
     if request.method == 'POST':
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return HttpResponseRedirect('/login/')
         form = AskForm(request.POST)
         if form.is_valid():
-            breakpoint()
-            user = User.objects.get(username=request.user.username)
-            #user = User.objects.get(pk=1)
+            user_id = request.session['_auth_user_id']
+            user = User.objects.get(pk=user_id) or "Not authorized"
             question = form.save(user)
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
         form = AskForm()
-        user = User.objects.get(username=request.user.username)
-        author = request.user.username
-        breakpoint()
-    #author = User.objects.get(pk=1)
+        user = request.user.username
     return render(request, 'ask.html',
-                  {'form': form, 'author': author})
+                  {'form': form, 'user': user})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            cd = login_form.cleaned_data
+            user = authenticate(
+                username=cd['username'], password=cd['password'])
+
+            # breakpoint()
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+
+                    return redirect('/')
+                else:
+                    return HttpResponse('Disabled account')
+            else:
+                return HttpResponse('Disabled account')
+                # 'account/disabled_password.html')
+    else:
+        login_form = LoginForm()
+    return render(request, 'login.html', {'form': login_form})
+
+
+def register(request):
+    if request.method == 'POST':
+        user_form = RegisterForm(request.POST)
+        if user_form.is_valid():
+            cd = user_form.cleaned_data
+            new_user = User.objects.create_user(username=cd['username'],
+                                                password=cd['password'],
+                                                email=cd['email'])
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            return redirect('/ask')
+    else:
+        user_form = RegisterForm()
+    return render(request, 'signup.html', {'form': user_form})
+
+
+def logout(request):
+    auth.logout(request)
+    return render(request, 'login.html')
 
 
 # def user_login(request):
@@ -134,7 +184,6 @@ def ask(request, *args, **kwargs):
 #     else:
 #         form = LoginForm()
 #     return render(request, 'login.html', {'form': form})
-
 
 
 #
@@ -163,55 +212,13 @@ def ask(request, *args, **kwargs):
 #                                 {'loginForm': loginForm, 'password_is_wrong': True, 'registForm': registForm})
 #
 #
-# def logout(request):
-#     auth.logout(request)
-#     return render(request, 'index.html')
+
 #
 #
 # def account(request):
 #     registerForm = RegistForm()
 #     loginForm = LoginForm()
 #     return render(request, 'account.html', {'registForm': registerForm, 'loginForm': loginForm})
-
-
-def user_login(request):
-    if request.method == 'POST':
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            cd = login_form.cleaned_data
-            user = authenticate(
-                username=cd['username'], password=cd['password'])
-
-            # breakpoint()
-            if user is not None:
-                if user.is_active:
-
-                    login(request, user)
-                    return redirect('/')
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Disabled account')
-                #'account/disabled_password.html')
-    else:
-        login_form = LoginForm()
-    return render(request, 'login.html', {'form': login_form})
-
-
-def register(request):
-    if request.method == 'POST':
-        user_form = RegisterForm(request.POST)
-        if user_form.is_valid():
-            cd = user_form.cleaned_data
-            new_user = User.objects.create_user(username=cd['username'],
-                                                password=cd['password'],
-                                                email=cd['email'])
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
-            return redirect('/ask')
-    else:
-        user_form = RegisterForm()
-    return render(request, 'signup.html', {'form': user_form})
 
 
 # def register(request):
