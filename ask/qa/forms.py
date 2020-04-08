@@ -101,27 +101,33 @@ class AnswerForm(forms.Form):
 #         cleaned_data = super(LoginForm, self).clean()
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField(
-        required=True,
-        label=r'Username',
-        error_messages={'required': 'Required fields'},
-        widget=forms.TextInput(attrs={'placeholder': r'Username'}))
-    email = forms.EmailField(
-        required=True,
-        label=r'Email address',
-        error_messages={'required': 'Mailbox must be legal'},
-        widget=forms.EmailInput(attrs={'placeholder': r'Email address'}))
-    password = forms.CharField(
-        required=True,
-        label=r'Password',
-        error_messages={'required': 'Please enter your password'},
-        widget=forms.PasswordInput(attrs={'placeholder': r'Password'}))
-    # re_password = forms.CharField(
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, help_text='Это поле обязательно')
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2',)
+
+    # username = forms.CharField(
     #     required=True,
-    #     label=r'Repeat password',
-    #     error_messages={'required': 'Please enter the password again'},
-    #     widget=forms.PasswordInput(attrs={'placeholder': r'Repeat password'}))
+    #     label=r'Username',
+    #     error_messages={'required': 'Required fields'},
+    #     widget=forms.TextInput(attrs={'placeholder': r'Username'}))
+    # email = forms.EmailField(
+    #     required=True,
+    #     label=r'Email address',
+    #     error_messages={'required': 'Mailbox must be legal'},
+    #     widget=forms.EmailInput(attrs={'placeholder': r'Email address'}))
+    # password1 = forms.CharField(
+    #     required=True,
+    #     label=r'Password',)
+    #     # error_messages={'required': 'Please enter your password'},
+    #     # widget=forms.PasswordInput(attrs={'placeholder': r'Password'}))
+    # password2 = forms.CharField(
+    #     required=True,
+    #     label=r'Repeat password',)
+    #     # error_messages={'required': 'Please enter the password again'},
+    #     # widget=forms.PasswordInput(attrs={'placeholder': r'Repeat password'}))
 
     def clean(self):
         if not self.is_valid():

@@ -2,10 +2,30 @@
 
 {% block content %}
 
-    <div class="account-top heading"><h3>НоYвый пользователь</h3></div>
+    <h2>Регистрация</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+                {% if field.help_text %}
+                    <span>{{ field.help_text }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </p>
+        {% endfor %}
+        <button type="submit">Отправить</button>
+    </form>
+{% endblock %}
+
+{#    <div class="account-top heading"><h3>НоYвый пользователь</h3></div>
 
     <form method="post" action="{% url 'signup' %}">
-        {#    <form method="post" action=".">#}
+        #}{#    <form method="post" action=".">#}{#
         {% csrf_token %}
 
         {% if form.errors %}
@@ -20,7 +40,6 @@
 
         <input type="submit" value="Log in" />
         <input type="hidden" name="next" value="{{ next }}" />
-    </form>
+    </form>#}
 
-{% endblock %}
 

@@ -9,8 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.contrib import messages
 
-from .forms import AnswerForm, AskForm, LoginForm, \
-    RegisterForm  # , UserCreateForm
+from .forms import AnswerForm, AskForm, LoginForm, RegisterForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
@@ -34,7 +33,7 @@ def page(request):
         user = User.objects.get(pk=user_id) or "Not authorized"
     except KeyError:
         user = "Not authorized"
-   #breakpoint()
+    #breakpoint()
     if not page:
         page = 1
     try:
@@ -127,42 +126,37 @@ def user_login(request):
             cd = login_form.cleaned_data
             user = authenticate(
                 username=cd['username'], password=cd['password'])
-
-            # breakpoint()
             if user is not None:
                 if user.is_active:
                     login(request, user)
-
                     return redirect('/')
                 else:
                     return HttpResponse('Disabled account')
             else:
                 return HttpResponse('Disabled account')
-                # 'account/disabled_password.html')
     else:
         login_form = LoginForm()
     return render(request, 'login.html', {'form': login_form})
 
 
-def register(request):
+def signup(request):
     if request.method == 'POST':
-        user_form = RegisterForm(request.POST)
-        if user_form.is_valid():
-            cd = user_form.cleaned_data
-            new_user = User.objects.create_user(username=cd['username'],
-                                                password=cd['password'],
-                                                email=cd['email'])
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
-            return redirect('/ask')
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+        username = form.cleaned_data.get('username')
+        my_password = form.cleaned_data.get('password1')
+        this_user = authenticate(username=username, password=my_password)
+        login(request, this_user)
+        return redirect('/ask')
     else:
-        user_form = RegisterForm()
-    return render(request, 'signup.html', {'form': user_form})
+        form = RegisterForm()
+        return render(request, 'signup.html', {'form': form})
 
 
 def logout(request):
     auth.logout(request)
-    return render(request, 'login.html')
+    return redirect('/page')
 
 
 # def user_login(request):
