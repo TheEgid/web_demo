@@ -17,7 +17,7 @@ from .models import Question, Answer
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, SESSION_KEY
 
 
 def test(request, *args, **kwargs):
@@ -149,11 +149,10 @@ def signup(request):
                                                 email=cd['email'])
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-
         username = form.cleaned_data.get('username')
-        my_password = form.cleaned_data.get('password1')
+        my_password = form.cleaned_data.get('password')
         this_user = authenticate(username=username, password=my_password)
-        login(request, this_user)
+        login(request, this_user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('/ask')
     else:
         form = RegisterForm()
