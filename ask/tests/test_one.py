@@ -9,6 +9,9 @@ from django.db.models.fields import CharField, TextField, IntegerField, \
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.utils import timezone
 from django import forms
+from django.urls import reverse
+from django import test
+from django.test import RequestFactory
 
 from qa.models import QuestionManager
 from qa.models import Answer
@@ -17,6 +20,7 @@ from qa.models import Question
 from qa.forms import AnswerForm
 from qa.forms import AskForm
 
+from qa.views import test as tst
 
 class SimpleTest(unittest.TestCase):
     def setUp(self):
@@ -165,8 +169,8 @@ class TestInitData(unittest.TestCase):
                 rating=max_rating + i
             )
         time.sleep(2)
-        question = Question.objects.create(title='question last', text='text',
-                                           author=user)
+        # question = Question.objects.create(title='question last', text='text',
+        #                                    author=user)
         question, _ = Question.objects.get_or_create(pk=2,
                                                      title='question about pi',
                                                      text='what is the last '
@@ -222,11 +226,45 @@ class TestAnswerForm(unittest.TestCase):
 
 class TestAuthorship(unittest.TestCase):
     def test_authorship(self):
-        username = User.objects.all()[0]  # sys.argv[2]
-        q_id = username.id  # q_id = 1 #sys.argv[3]
-        question = Question.objects.get(pk=q_id)
+        username = User.objects.first()
+        q_id = username.id
+        question = Question.objects.filter(author_id=q_id).first()
         user = User.objects.get(username=username)
         assert question.author == user, \
             f"Question id={q_id} " \
             f"created by authorized user username={username}, " \
             f"but author field is empty"
+
+    def test_login_logout(self):
+        client = test.Client()
+        assert 200 == client.get(reverse('login')).status_code
+        assert 302 == client.get(reverse('logout')).status_code
+
+        # __test__ = {"urls": """
+        # c = test.Client()
+        # >>> c.get(reverse('registration')).status_code
+        # 200
+        # >>> c.get(reverse('login')).status_code
+        # 200
+        # >>> c.get(reverse('logout')).status_code
+        # 302
+        # """}
+        # req = RequestFactory().get(reverse("test"))
+
+
+        # resp = tst.as_view(req)
+        # #resp = views.MyView.as_view()(req)
+        # breakpoint()
+        # assert resp.status_code == 200
+
+# from django.test.client import encode_multipart, RequestFactory
+#
+# factory = RequestFactory()
+# data = {'title': 'remember to email dave'}
+# content = encode_multipart('BoUnDaRyStRiNg', data)
+# content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg'
+# request = factory.put('/notes/547/', content, content_type=content_type)
+
+
+#https://www.django-rest-framework.org/api-guide/testing/
+

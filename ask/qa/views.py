@@ -1,23 +1,15 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Answer, Question
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.http import require_GET, require_POST
-from django.http import HttpResponse
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-
 from django.contrib import auth
-from django.contrib import messages
-
-from .forms import AnswerForm, AskForm, LoginForm, RegisterForm
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.forms import UserCreationForm
-from .models import Question, Answer
-
+from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login, SESSION_KEY
+from django.contrib.auth import authenticate, login
+
+from .models import Question, Answer
+from .forms import AnswerForm, AskForm, LoginForm, RegisterForm
 
 
 def test(request, *args, **kwargs):
@@ -33,7 +25,6 @@ def page(request):
         user = User.objects.get(pk=user_id) or "Not authorized"
     except KeyError:
         user = "Not authorized"
-    #breakpoint()
     if not page:
         page = 1
     try:
@@ -48,8 +39,7 @@ def page(request):
                   {'page': page,
                    'all_pages': all_pages,
                    'questions': questions,
-                   'user': user,
-                   })
+                   'user': user})
 
 
 def popular_page(request):
@@ -99,9 +89,7 @@ def question(request, slug):
                    'answers': answers})
 
 
-# @login_required
-def ask(request, *args, **kwargs):
-    global user
+def ask(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return HttpResponseRedirect('/login/')
@@ -115,8 +103,8 @@ def ask(request, *args, **kwargs):
     else:
         form = AskForm()
         user = request.user.username
-    return render(request, 'ask.html',
-                  {'form': form, 'user': user})
+        return render(request, 'ask.html',
+                      {'form': form, 'user': user})
 
 
 def user_login(request):
@@ -124,11 +112,11 @@ def user_login(request):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             cd = login_form.cleaned_data
-            user = authenticate(
-                username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
+            this_user = authenticate(username=cd['username'],
+                                     password=cd['password'])
+            if this_user is not None:
+                if this_user.is_active:
+                    login(request, this_user, backend='django.contrib.auth.backends.ModelBackend')
                     return redirect('/')
                 else:
                     return HttpResponse('Disabled account')
@@ -136,7 +124,7 @@ def user_login(request):
                 return HttpResponse('Disabled account')
     else:
         login_form = LoginForm()
-    return render(request, 'login.html', {'form': login_form})
+        return render(request, 'login.html', {'form': login_form})
 
 
 def signup(request):
@@ -153,6 +141,7 @@ def signup(request):
         my_password = form.cleaned_data.get('password')
         this_user = authenticate(username=username, password=my_password)
         login(request, this_user, backend='django.contrib.auth.backends.ModelBackend')
+        #print(request.headers)
         return redirect('/ask')
     else:
         form = RegisterForm()

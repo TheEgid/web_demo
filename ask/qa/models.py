@@ -44,6 +44,7 @@ class Question(models.Model):
         url = reverse('question', args=(self.pk,))
         return url
 
+
 class Answer(models.Model):
     text = models.TextField()
     added_at = models.DateTimeField(null=True, blank=False, auto_now_add=True)
