@@ -8,8 +8,54 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 
-from .models import Question, Answer
+from .models import Question, Answer, StatCounter
 from .forms import AnswerForm, AskForm, LoginForm, RegisterForm
+from .serializers import StatCounterSerializer
+
+from rest_framework.views import APIView
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+
+
+class StatcounterView(APIView):
+    # authentication_classes = (BasicAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+
+    @staticmethod
+    def get(self):
+        snippets = StatCounter.objects.first()
+        serializer = StatCounterSerializer(snippets, many=False)
+        return Response(serializer.data)
+
+
+
+    # def statcounter(self, request,):
+    #     user = "78"
+    #     mycounter = StatCounter.objects.first()
+    #     return Response({'enrolled': True})
+    #     # return render(request, 'statcounter.html',
+    #     #               {'mycounter': mycounter,
+    #     #                'user': user})
+
+        #mycounter = get_object_or_404(StatCounter, pk=pk)
+        #mycounter.students.add(request.user)
+
+        #return Response({'enrolled': True})
+
+
+
+
+    # mycounter = StatCounter.objects.first()
+    # try:
+    #     user_id = request.session['_auth_user_id']
+    #     user = User.objects.get(pk=user_id) or "Not authorized"
+    # except KeyError:
+    #     user = "Not authorized"
+    # return render(request, 'statcounter.html',
+    #               {'mycounter': mycounter,
+    #                'user': user})
 
 
 def test(request, *args, **kwargs):
@@ -116,7 +162,8 @@ def user_login(request):
                                      password=cd['password'])
             if this_user is not None:
                 if this_user.is_active:
-                    login(request, this_user, backend='django.contrib.auth.backends.ModelBackend')
+                    login(request, this_user,
+                          backend='django.contrib.auth.backends.ModelBackend')
                     return redirect('/')
                 else:
                     return HttpResponse('Disabled account')
@@ -140,8 +187,9 @@ def signup(request):
         username = form.cleaned_data.get('username')
         my_password = form.cleaned_data.get('password')
         this_user = authenticate(username=username, password=my_password)
-        login(request, this_user, backend='django.contrib.auth.backends.ModelBackend')
-        #print(request.headers)
+        login(request, this_user,
+              backend='django.contrib.auth.backends.ModelBackend')
+        # print(request.headers)
         return redirect('/ask')
     else:
         form = RegisterForm()
@@ -151,6 +199,11 @@ def signup(request):
 def logout(request):
     auth.logout(request)
     return redirect('/page')
+
+
+
+
+
 
 
 # def user_login(request):

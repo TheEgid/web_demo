@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <p>
+        <button id='button1'> Текст, который будет на кнопке </button>
+
+    </p>
+
+    <p id='output' type="text">
+
+        <script>
+            loadbtn();
+           // getFromAPI().then(data => get_output_text(data));
+
+            async function getFromAPI(apiUrl) {
+                let apiLink = `${window.location.protocol}//${window.location.host}/${apiUrl}/`;
+                let response = await fetch(apiLink);
+                if (!response.ok) {console.log(` ${response.status}`); return;}
+                let apiFetch = await response.json();
+                console.log(apiFetch);
+                return apiFetch.text;
+            }
+
+            function loadbtn() {
+                document.getElementById("button1").onclick = function() {
+                    getFromAPI("statcounter").then(data => get_output_text(data));
+                };
+            }
+
+            let get_output_text = (output_data) => {
+                document.getElementById("output").textContent = output_data;
+            };
+
+        </script>
+
+        
+    <p >...После скрипта.</p>
+
+
+
+{% endblock %}
